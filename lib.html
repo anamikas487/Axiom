@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-20">
+        <div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+            <h1 class="text-2xl font-bold mb-4 text-center">Login to Library System</h1>
+
+      
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="username" class="block font-medium">Username</label>
+                    <input type="text" id="username" class="border w-full p-2 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block font-medium">Password</label>
+                    <input type="password" id="password" class="border w-full p-2 rounded" required>
+                </div>
+                <button type="submit" class="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">Login</button>
+            </form>
+
+            <div class="text-center mt-4">
+                <a href="register.html" class="text-blue-500">Don't have an account? Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      
+        const form = document.getElementById('login-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+           
+            if (!username || !password) {
+                alert('Please fill in both fields');
+                return;
+            }
+
+         
+            fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                   
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    if (data.role === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        window.location.href = 'user-dashboard.html';
+                    }
+                } else {
+                    alert('Invalid credentials');
+                }
+            })
+            .catch(err => console.error(err));
+        });
+    </script>
+</body>
+</html>
