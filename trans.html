@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Login</title>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-20">
+    <div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+      <h1 class="text-2xl font-bold mb-4">Library Management System</h1>
+
+      <h2 class="text-2xl font-bold">Home Page</h2>
+      <button class="text-blue-500 underline" onclick="goBack()">Back</button>
+    </div>
+
+    
+    <div class="flex justify-around mb-6">
+      <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="navigate('reports')">Reports</button>
+      <button class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" onclick="navigate('transactions')">Transactions</button>
+    </div>
+
+    
+    <h3 class="text-lg font-semibold mb-4">Product Details</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border text-center">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border px-4 py-2">Code No From</th>
+            <th class="border px-4 py-2">Code No To</th>
+            <th class="border px-4 py-2">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border px-4 py-2">SC(B/M)000001</td>
+            <td class="border px-4 py-2">SC(B/M)000004</td>
+            <td class="border px-4 py-2">Science</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">EC(B/M)000001</td>
+            <td class="border px-4 py-2">EC(B/M)000004</td>
+            <td class="border px-4 py-2">Economics</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">FC(B/M)000001</td>
+            <td class="border px-4 py-2">FC(B/M)000004</td>
+            <td class="border px-4 py-2">Fiction</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">CH(B/M)000001</td>
+            <td class="border px-4 py-2">CH(B/M)000004</td>
+            <td class="border px-4 py-2">Children</td>
+          </tr>
+          <tr>
+            <td class="border px-4 py-2">PD(B/M)000001</td>
+            <td class="border px-4 py-2">PD(B/M)000004</td>
+            <td class="border px-4 py-2">Personal Development</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="flex justify-end mt-6">
+      <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onclick="logout()">Log Out</button>
+    </div>
+  </div>
+
+  
+  <div class="container mx-auto mt-20">
+    <form id="login-form">
+      <div class="mb-4">
+        <label for="username" class="block font-medium">Username</label>
+        <input type="text" id="username" class="border w-full p-2 rounded" required>
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block font-medium">Password</label>
+        <input type="password" id="password" class="border w-full p-2 rounded" required>
+      </div>
+      <div class="mb-4">
+        <label class="block font-medium">Role</label>
+        <label><input type="radio" name="role" value="Admin" required> Admin</label>
+        <label><input type="radio" name="role" value="User"> User</label>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const role = document.querySelector('input[name="role"]:checked').value;
+
+      
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, role }),
+      }).then(response => {
+        if (response.ok) {
+          
+          window.location.href = role === 'Admin' ? '/admin-home.html' : '/user-home.html';
+        } else {
+          alert('Invalid login credentials');
+        }
+      });
+    });
+
+    function cancelLogin() {
+      alert('Login canceled!');
+      document.getElementById('login-form').reset();
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    function navigate(page) {
+      
+      window.location.href = `/${page}.html`;
+    }
+
+    function logout() {
+      alert('Logged out successfully!');
+      window.location.href = '/login.html';
+    }
+  </script>
+</body>
+</html>
